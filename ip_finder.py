@@ -3,7 +3,7 @@ import json
 import re
 from bs4 import BeautifulSoup
 from requests_html import HTMLSession
-
+# from main import session
 
 def get_ips(x_input, y_input):
     list_of_ips = []
@@ -62,6 +62,16 @@ def list_all_countries(html_content):
     return list_of_countries
 
 
+# def save_ip_perfix_country_in_db(perfix_input, country_name):
+#     for name, abbr in countries.items():
+#         country_obj = session.query(Country).filter_by(abbr=abbr).first()
+#         if not country_obj:
+#             print(name, abbr)
+#             new_country = Country(name=name, abbr=abbr)
+#             session.add(new_country)  # Add the new country object to the session
+#             session.commit()
+
+
 def get_countries_page_with_request_html(url):
     session = HTMLSession()
 
@@ -76,6 +86,9 @@ def get_countries_page_with_request_html(url):
     countries = list_all_countries(html_content)
     for country in countries:
         print(country)
+
+
+
 
 
 if __name__ == '__main__':
