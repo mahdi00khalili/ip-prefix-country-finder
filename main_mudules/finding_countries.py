@@ -35,6 +35,7 @@ def finding_countries_with_api(x_y_input):
 
 
 def finding_countries():
+    print('\n')
     x_y = input('ip-prefix (x.y): ')
     if is_public_ip_perfix(x_y):
         check = finding_countries_in_database(x_y)

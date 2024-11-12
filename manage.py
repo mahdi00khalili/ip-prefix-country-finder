@@ -1,10 +1,13 @@
 import subprocess
 
+
 def quit_program():
     quit()
 
+
 while True:
-    operation = input('1. init the project \n2. update countries\n3. update ip-country table\n4. finding the list of countries for input perfix\n0. quit\n\nSelect an operation: ')
+    operation = input(
+        '1. init the project \n2. update countries\n3. update ip-country table\n4. finding the list of countries for input perfix\n0. quit\n\nSelect an operation: >>> ')
     if operation == '1':
         # Run main.py
         subprocess.run(["python", "main_mudules/main.py"])
@@ -33,16 +36,11 @@ while True:
         # Run finding_countries.py
         while True:
             subprocess.run(["python3", "main_mudules/finding_countries.py"])
-            mini_operation = input('\n1. finding for a new perfix\n00. back\n\nSelect an operation: ')
-            if mini_operation == '1':
-                continue
-            else:
+            mini_operation = input("\nPress Enter to search again or '00' to go back: >>> ")
+            if mini_operation == '00':
                 break
+            else:
+                continue
 
     else:
         quit_program()
-
-
-
-
-
