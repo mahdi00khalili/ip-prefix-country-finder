@@ -1,6 +1,6 @@
 from models.models import IpPerfix
 from main import session
-from ip_finder import request_to_map_ips_from_api
+from api_scrape_database_handler import request_to_map_ips_from_api
 
 
 def add_update_ip_country():

@@ -1,5 +1,5 @@
 from models.models import IpCountry, IpPerfix, Country
-from ip_finder import request_to_map_ips_from_api
+from api_scrape_database_handler import request_to_map_ips_from_api
 from main import session
 
 
