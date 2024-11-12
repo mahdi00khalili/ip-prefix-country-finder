@@ -2,8 +2,10 @@ from models.models import Country, IpCountry
 from sqlalchemy import create_engine, event
 from models.base import Base
 from sqlalchemy.orm import sessionmaker
-from models.triggers.country_events import *
-from models.triggers.ip_country_events import *
+from models.triggers.country_events import log_country_insertion
+from models.triggers.ip_country_events import log_ip_country_deletion, log_ip_country_insertion
+
+
 
 # Set up the engine for connecting to an SQLite database
 DATABASE_PATH = "./ip_perfix_country_finder.sqlite"
@@ -17,13 +19,9 @@ session = Session()  # Instantiate a new session for interacting with the databa
 Base.metadata.create_all(engine)
 
 
-def fire_events(model_name, model_str_name):
-    # Attach event listeners to model
+event.listen(Country, 'after_insert', log_country_insertion)
 
-    event.listen(model_name, 'after_insert', globals()[f'log_{model_str_name}_insertion'])
-    if model_name == 'ip_country':
-        event.listen(model_name, 'after_update', globals()[f'log_{model_str_name}_update'])
+event.listen(IpCountry, 'after_insert', log_ip_country_insertion)
+event.listen(IpCountry, 'after_delete', log_ip_country_deletion)
 
 
-fire_events(Country, 'country')
-fire_events(IpCountry, 'ip_country')

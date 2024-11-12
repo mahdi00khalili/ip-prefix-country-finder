@@ -3,7 +3,60 @@ import json
 import re
 from bs4 import BeautifulSoup
 from requests_html import HTMLSession
-# from main import session
+from main import session
+from models.models import IpPerfix, Country, IpCountry
+
+
+def remove_expired_ip_country(ip_country_dict):
+    ip_perfix_id = list(ip_country_dict.keys())[0]
+    ip_country_list_in_database = session.query(IpCountry).filter_by(ip_perfix_id=int(ip_perfix_id)).all()
+
+    for ip_country in ip_country_list_in_database:
+        if ip_country.country_id not in ip_country_dict[ip_perfix_id]:
+            print(ip_country.country_id)
+            session.delete(ip_country)
+    session.commit()
+
+
+def convert_country_list_to_id_list(countries):
+    countries_id = []
+    for country in countries:
+        country_obj = session.query(Country).filter_by(name=country).first()
+        if country_obj:
+            countries_id.append(country_obj.id)
+    return countries_id
+
+
+def save_ip_country_in_db(countries_id, ip_perfix):
+    ip_perfix_id = session.query(IpPerfix).filter_by(ip_perfix=ip_perfix).first().id
+
+    for country_id in countries_id:
+        ip_country_obj = session.query(IpCountry).filter_by(ip_perfix_id=ip_perfix_id, country_id=country_id).first()
+        if not ip_country_obj:
+            new_ip_country = IpCountry(ip_perfix_id=ip_perfix_id, country_id=country_id)
+            session.add(new_ip_country)
+    session.commit()
+
+    ip_country_dict = {f'{ip_perfix_id}': [country_id for country_id in countries_id]}
+    remove_expired_ip_country(ip_country_dict)
+
+
+def get_countries_page_with_request_html(url, ip_perfix):
+    session_html = HTMLSession()
+
+    # Make the request with the proxy and custom headers
+    response = session_html.get(url)
+
+    # Wait until a specific element is present
+    response.html.render(wait=3, sleep=2, scrolldown=3)  # Additional scrolling and waiting
+    html_content = response.html.html
+
+    list_all_countries(html_content)
+    countries = list_all_countries(html_content)
+    countries_id = convert_country_list_to_id_list(countries)
+    save_ip_country_in_db(countries_id, ip_perfix)
+    return countries
+
 
 def get_ips(x_input, y_input):
     list_of_ips = []
@@ -17,23 +70,25 @@ def get_ips(x_input, y_input):
     return '\n'.join(list_of_ips)
 
 
-def request_to_map_ips(x_input, y_input):
-    # Define the SOCKS5 proxy
-
+def request_to_map_ips_from_api(x_input, y_input):
     try:
         url = "https://ipinfo.io/tools/map"
         payload = {
             "ips": get_ips(x_input, y_input)  # "8.8.8.8\n4.4.4.4"
         }
-
-        # Make the request using the SOCKS5 proxy
         response = requests.post(url, data=payload)
 
-        # Return response if successful
-        return response
+        # Parse the JSON string
+        response_data = json.loads(response.text)
+
+        # Extract the report URL
+        report_url = response_data.get("reportUrl")
+        ip_perfix = x_input + '.' + y_input
+        countries = get_countries_page_with_request_html(report_url, ip_perfix)
+        return countries
     except requests.exceptions.RequestException as e:
-        print("Request failed:", e)
-        return None
+        print("Request failed:", e, '(on request_to_map_ips_from_api function)')
+        quit()
 
 
 def list_all_countries(html_content):
@@ -62,43 +117,3 @@ def list_all_countries(html_content):
     return list_of_countries
 
 
-# def save_ip_perfix_country_in_db(perfix_input, country_name):
-#     for name, abbr in countries.items():
-#         country_obj = session.query(Country).filter_by(abbr=abbr).first()
-#         if not country_obj:
-#             print(name, abbr)
-#             new_country = Country(name=name, abbr=abbr)
-#             session.add(new_country)  # Add the new country object to the session
-#             session.commit()
-
-
-def get_countries_page_with_request_html(url):
-    session = HTMLSession()
-
-    # Make the request with the proxy and custom headers
-    response = session.get(url)
-
-    # Wait until a specific element is present
-    response.html.render(wait=3, sleep=2, scrolldown=3)  # Additional scrolling and waiting
-    html_content = response.html.html
-
-    list_all_countries(html_content)
-    countries = list_all_countries(html_content)
-    for country in countries:
-        print(country)
-
-
-
-
-
-if __name__ == '__main__':
-    x_y = input('ip-prefix (x.y): ')
-    x, y = x_y.split('.')
-    response_json = request_to_map_ips(x, y)
-
-    # Parse the JSON string
-    data = json.loads(response_json.text)
-
-    # Extract the report URL
-    report_url = data.get("reportUrl")
-    get_countries_page_with_request_html(report_url)

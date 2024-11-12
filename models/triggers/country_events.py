@@ -16,7 +16,6 @@ def log_country_insertion(mapper, connection, target):
         old_value='',  # For new insertions, there is no old value
         new_value='',
         operation="INSERT",
-        changed_by="System",  # Assuming system for now, this should ideally come from the tag context
     )
     session.add(log_entry)
 
