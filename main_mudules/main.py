@@ -8,7 +8,7 @@ from models.triggers.ip_country_events import log_ip_country_deletion, log_ip_co
 
 
 # Set up the engine for connecting to an SQLite database
-DATABASE_PATH = "../ip_perfix_country_finder.sqlite"
+DATABASE_PATH = "ip_perfix_country_finder.sqlite"
 engine = create_engine(f"sqlite:///{DATABASE_PATH}")
 
 # Create a configured session class bound to the engine
