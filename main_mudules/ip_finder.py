@@ -43,16 +43,18 @@ def save_ip_country_in_db(countries_id, ip_perfix):
 
 def get_countries_page_with_request_html(url, ip_perfix):
     session_html = HTMLSession()
-
-    # Make the request with the proxy and custom headers
     response = session_html.get(url)
 
     # Wait until a specific element is present
     response.html.render(wait=3, sleep=2, scrolldown=3)  # Additional scrolling and waiting
     html_content = response.html.html
 
-    list_all_countries(html_content)
-    countries = list_all_countries(html_content)
+    try:
+        countries = list_all_countries(html_content)
+    except Exception as e:
+        print("An unexpected error occurred when parsing the page:", e, '(on get_countries_page_with_request_html function)')
+        quit()
+
     countries_id = convert_country_list_to_id_list(countries)
     save_ip_country_in_db(countries_id, ip_perfix)
     return countries
@@ -76,26 +78,24 @@ def request_to_map_ips_from_api(x_input, y_input):
         payload = {
             "ips": get_ips(x_input, y_input)  # "8.8.8.8\n4.4.4.4"
         }
+
         response = requests.post(url, data=payload)
-
-        # Parse the JSON string
         response_data = json.loads(response.text)
-
-        # Extract the report URL
         report_url = response_data.get("reportUrl")
         ip_perfix = x_input + '.' + y_input
         countries = get_countries_page_with_request_html(report_url, ip_perfix)
+
         return countries
     except requests.exceptions.RequestException as e:
         print("Request failed:", e, '(on request_to_map_ips_from_api function)')
         quit()
+    except Exception as e:
+        print("An unexpected error occurred:", e, '(on request_to_map_ips_from_api function)')
+        quit()
 
 
 def list_all_countries(html_content):
-    # Open the HTML file
     html_content = html_content
-
-    # Parse the HTML content with BeautifulSoup
     soup = BeautifulSoup(html_content, "html.parser")
 
     # Find all <li> tags with the specified class pattern

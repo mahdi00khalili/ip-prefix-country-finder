@@ -34,15 +34,14 @@ def finding_countries_with_api(x_y_input):
             print(country)
 
 
-def finding_countries(x_y_input):
-    check = finding_countries_in_database(x_y_input)
-    if not check:
-        finding_countries_with_api(x_y_input)
-
-
-if __name__ == '__main__':
+def finding_countries():
     x_y = input('ip-prefix (x.y): ')
     if is_public_ip_perfix(x_y):
-        finding_countries(x_y)
+        check = finding_countries_in_database(x_y)
+        if not check:
+            finding_countries_with_api(x_y)
     else:
         print('Enter a public ip perfix')
+
+
+finding_countries()

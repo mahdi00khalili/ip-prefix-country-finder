@@ -7,12 +7,18 @@ private_ips
 Class A:
 10.0.0.0 to 10.255.255.255
 Subnet Mask: 255.0.0.0
+
 Class B:
 172.16.0.0 to 172.31.255.255
 Subnet Mask: 255.240.0.0
+
 Class C:
 192.168.0.0 to 192.168.255.255
 Subnet Mask: 255.255.255.0
+
+Loopback (127.0.0.0/8):
+127.0.0.0 to 127.255.255.255
+Subnet Mask: 255.0.0.0
 
 """
 
