@@ -2,7 +2,7 @@
 # Project Name
 
 ### Description
-This project is designed to [briefly explain the purpose, e.g., "help automate X task" or "provide functionality for Y process"]. It aims to streamline and simplify the user workflow by providing [describe any specific capabilities if relevant].
+This project is designed to getting the list of coutires according to given ip perfix(x.y).
 
 ### Getting Started
 
@@ -16,8 +16,8 @@ To use this project, please follow these steps.
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/yourusername/yourprojectname.git
-   cd yourprojectname
+   git clone https://github.com/mahdi00khalili/ip-prefix-country-finder.git 
+   cd ip-prefix-country-finder 
    ```
 
 2. **Install Dependencies**
@@ -47,7 +47,7 @@ python manage.py
 ### Example Usage
 Provide a usage example here, if relevant, for example:
 ```bash
-python manage.py --some-option
+python3 manage.py 
 ```
 
 ### Troubleshooting
@@ -55,5 +55,3 @@ python manage.py --some-option
 - **403 Error**: Ensure you’re using a non-sanctioned IP address.
 - **Installation Issues**: Double-check that all dependencies are installed. Run `pip install -r requirements.txt` if needed.
 
-### License
-This project is licensed under the MIT License.
