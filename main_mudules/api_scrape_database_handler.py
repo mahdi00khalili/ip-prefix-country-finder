@@ -52,7 +52,8 @@ def get_countries_page_with_request_html(url, ip_perfix):
     try:
         countries = list_all_countries(html_content)
     except Exception as e:
-        print("An unexpected error occurred when parsing the page:", e, '(on get_countries_page_with_request_html function)')
+        print("An unexpected error occurred when parsing the page:", e,
+              '(on get_countries_page_with_request_html function)')
         quit()
 
     countries_id = convert_country_list_to_id_list(countries)
@@ -115,5 +116,3 @@ def list_all_countries(html_content):
                 list_of_countries.append(country.strip())
 
     return list_of_countries
-
-

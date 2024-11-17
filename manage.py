@@ -22,6 +22,13 @@ while True:
         print('Adding the ip perfixes to database.')
         subprocess.run(["python3", "main_mudules/add_ip_perfix.py"])
         print('Done\n')
+
+        # Run add_ip_perfix.py
+        print('Adding the ip countries to database.')
+        subprocess.run(["python3", "main_mudules/add_update_ip_country.py"])
+        print('Done\n')
+
+
     elif operation == '2':
         # Run add_update_ip_country.py
         print('updating the ip_country table.')

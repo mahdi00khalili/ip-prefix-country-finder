@@ -44,5 +44,5 @@ def finding_countries():
     else:
         print('Enter a public ip perfix')
 
-
-finding_countries()
+if __name__ == '__main__':
+    finding_countries()

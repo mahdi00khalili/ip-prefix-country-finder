@@ -10,4 +10,5 @@ def add_update_ip_country():
         x,y = ip_perfix_object.ip_perfix.split('.')
         request_to_map_ips_from_api(x,y)
 
-add_update_ip_country()
+if __name__ == '__main__':
+    add_update_ip_country()
